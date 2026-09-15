@@ -1,1 +1,11 @@
-theme: jekyll-theme-slate
+title: Mendel Keller
+description: Philosophy, Mathematics & Ideas
+author: Mendel Keller
+url: https://mendelkeller.com
+markdown: kramdown
+theme: null
+
+# Jekyll settings
+exclude: [README.md, LICENSE.md]
+keep_files: []
+plugins: []
