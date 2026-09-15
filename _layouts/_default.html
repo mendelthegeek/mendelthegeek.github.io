@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}Mendel Keller</title>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f7f6;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --border-color: #e5e4e3;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a0;
+            --border-color: #2a2a2a;
+            --accent: #60a5fa;
+            --accent-hover: #93c5fd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            z-index: 1000;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .theme-toggle svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            stroke: var(--text-primary);
+            fill: none;
+            stroke-width: 2;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle.rotating svg {
+            animation: rotate 0.6s ease;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Navigation header */
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--spacing-lg) 0;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .header-content {
+            max-width: 48rem;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        @media (max-width: 640px) {
+            .header-content {
+                padding: 0 var(--spacing-md);
+            }
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+
+        header nav {
+            display: flex;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        header nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        header nav a:hover,
+        header nav a.active {
+            color: var(--accent);
+        }
+
+        header nav a::after {
+            display: none;
+        }
+
+        /* Container */
+        .container {
+            max-width: 48rem;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+            min-height: 60vh;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 var(--spacing-md);
+            }
+        }
+
+        /* Hero section */
+        .hero {
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-xl) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-sm);
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            max-width: 35rem;
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Page title */
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-lg);
+            letter-spacing: -0.02em;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--spacing-md);
+            display: inline-block;
+        }
+
+        .section-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        /* Links */
+        .link-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+            transform: translateX(4px);
+        }
+
+        a::after {
+            content: "→";
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        a:hover::after {
+            opacity: 1;
+        }
+
+        /* Card styling for sections */
+        .link-card {
+            padding: var(--spacing-md);
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .link-card:hover {
+            border-color: var(--accent);
+            background-color: var(--bg-primary);
+        }
+
+        .link-card a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .link-card a::after {
+            opacity: 1;
+        }
+
+        /* Content styling */
+        .page-content {
+            line-height: 1.7;
+        }
+
+        .page-content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .page-content h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .page-content p {
+            margin-bottom: var(--spacing-md);
+            max-width: 35rem;
+        }
+
+        .page-content ul,
+        .page-content ol {
+            margin-left: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .page-content li {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: var(--spacing-xl);
+            padding: var(--spacing-lg) 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .footer-content {
+            max-width: 48rem;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        @media (max-width: 640px) {
+            .footer-content {
+                padding: 0 var(--spacing-md);
+            }
+        }
+
+        .social-links {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            color: var(--accent);
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        /* Focus styles for accessibility */
+        a:focus, button:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg id="themeIcon" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+    </button>
+
+    <header>
+        <div class="header-content">
+            <h1><a href="/" style="color: var(--text-primary); text-decoration: none;">Mendel Keller</a></h1>
+            <nav>
+                <a href="/" {% if page.url == '/' %}class="active"{% endif %}>Home</a>
+                <a href="/philosophy" {% if page.url contains '/philosophy' %}class="active"{% endif %}>Philosophy</a>
+                <a href="/Maths" {% if page.url contains '/Maths' %}class="active"{% endif %}>Mathematics</a>
+                <a href="/Other" {% if page.url contains '/Other' %}class="active"{% endif %}>Other</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        {{ content }}
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://github.com/mendelthegeek">GitHub</a>
+                <a href="https://www.youtube.com/@mendelkeller8320">YouTube</a>
+                <a href="https://medium.com/@mendelkeller">Medium</a>
+            </div>
+            <div class="footer-text">
+                <p>&copy; 2024 Mendel Keller. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme management
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        // Initialize theme based on user preference or system setting
+        function initializeTheme() {
+            // Check localStorage first
+            const savedTheme = localStorage.getItem('theme');
+            
+            if (savedTheme) {
+                html.setAttribute('data-theme', savedTheme);
+            } else {
+                // Check system preference
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const initialTheme = prefersDark ? 'dark' : 'light';
+                html.setAttribute('data-theme', initialTheme);
+            }
+        }
+
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Add rotation animation
+            themeToggle.classList.add('rotating');
+            setTimeout(() => themeToggle.classList.remove('rotating'), 600);
+        });
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            // Only auto-switch if user hasn't set a preference
+            if (!localStorage.getItem('theme')) {
+                const newTheme = e.matches ? 'dark' : 'light';
+                html.setAttribute('data-theme', newTheme);
+            }
+        });
+
+        // Initialize on page load
+        initializeTheme();
+    </script>
+</body>
+</html>
