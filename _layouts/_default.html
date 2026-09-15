@@ -372,10 +372,23 @@
         <div class="header-content">
             <h1><a href="/" style="color: var(--text-primary); text-decoration: none;">Mendel Keller</a></h1>
             <nav>
-                <a href="/" {% if page.url == '/' %}class="active"{% endif %}>Home</a>
-                <a href="/philosophy" {% if page.url contains '/philosophy' %}class="active"{% endif %}>Philosophy</a>
-                <a href="/Maths" {% if page.url contains '/Maths' %}class="active"{% endif %}>Mathematics</a>
-                <a href="/Other" {% if page.url contains '/Other' %}class="active"{% endif %}>Other</a>
+                {% if page.url == '/' %}
+                <a href="/" class="active">Home</a>
+                {% else %}
+                <a href="/">Home</a>
+                {% endif %}
+
+                {% if page.url contains '/philosophy' %}
+                <a href="/philosophy" class="active">Philosophy</a>
+                {% else %}
+                <a href="/philosophy">Philosophy</a>
+                {% endif %}
+
+                {% if page.url contains '/Maths' %}
+                <a href="/Maths" class="active">Mathematics</a>
+                {% else %}
+                <a href="/Maths">Mathematics</a>
+                {% endif %}
             </nav>
         </div>
     </header>
